@@ -49,14 +49,15 @@ public class QuartzConfigration {
     }
 
     @Bean(name = "scheduler")
-    public SchedulerFactoryBean schedulerFactory(Trigger... cronJobTrigger) {
+    public SchedulerFactoryBean schedulerFactory(org.quartz.Trigger jobTrigger) {
         SchedulerFactoryBean bean = new SchedulerFactoryBean();
         //设置是否任意一个已定义的Job会覆盖现在的Job。默认为false，即已定义的Job不会覆盖现有的Job。
         bean.setOverwriteExistingJobs(true);
         // 延时启动，应用启动5秒后  ，定时器才开始启动
         bean.setStartupDelay(5);
-        // 注册定时触发器
-        bean.setTriggers((org.quartz.Trigger[]) cronJobTrigger);
+        org.quartz.Trigger[] triggers =  new org.quartz.Trigger[1];
+        triggers[0] = jobTrigger;
+        bean.setTriggers(triggers);
         return bean;
     }
     //多任务时的Scheduler，动态设置Trigger。一个SchedulerFactoryBean可能会有多个Trigger
